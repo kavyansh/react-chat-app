@@ -1,6 +1,6 @@
 **React Chat App** Instructions to run the code.
 
-1. Clone repo -
+1. Clone repo - https://github.com/kavyansh/react-chat-app
 1. Run command “npm install”
 1. Run command “npm run dev”
 1. Go to url - <http://localhost:5173/>
