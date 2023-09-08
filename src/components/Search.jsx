@@ -38,7 +38,7 @@ function Search() {
     setUser("");
 
     if (user.id === activeUser.id) return;
-    changeActiveUser(user.id);
+    changeActiveUser(user);
   }
 
   return (

@@ -10,7 +10,7 @@ function Messages() {
 
   return (
     <div className="messages">
-      {currentChat.map((chat) => (
+      {currentChat?.map((chat) => (
         <Message
           key={chat.id}
           time={chat.time}
