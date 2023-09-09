@@ -9,9 +9,11 @@ function Message({
   attachmentImg = "",
   avatar = "",
   repliedTo,
+  threadedChat,
 }) {
   const ref = useRef();
-  const { setReplyingToText } = useUsersContext();
+  const { setReplyingToText, openThreadedChat, setThreadedChat } =
+    useUsersContext();
 
   useEffect(
     function () {
@@ -24,6 +26,11 @@ function Message({
     setReplyingToText(message);
   }
 
+  function handleSeeAllClick() {
+    openThreadedChat();
+    setThreadedChat(threadedChat);
+  }
+
   return (
     <div ref={ref} className={`message ${type === "sent" ? "owner" : ""}`}>
       <div className="messageInfo">
@@ -31,7 +38,14 @@ function Message({
         <span>{time}</span>
       </div>
       <div className="messageContent">
-        {repliedTo && <span className="repliedToText">{repliedTo}</span>}
+        {repliedTo && (
+          <>
+            <span className="repliedToText">{repliedTo}</span>
+            <span onClick={handleSeeAllClick} className="seeAllReplies">
+              See all
+            </span>
+          </>
+        )}
         <div className="messageText">
           {!repliedTo && (
             <span onClick={handleReplyText} className="reply">

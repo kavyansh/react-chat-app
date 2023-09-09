@@ -64,7 +64,17 @@ const initialState = {
     {
       id: "1_3",
       messages: [
-        { type: "sent", message: "Hi", time: "5:20 PM" },
+        {
+          type: "sent",
+          message: "Hi",
+          time: "5:20 PM",
+          threadedChat: [
+            {
+              type: "received",
+              message: "Thats wrong",
+            },
+          ],
+        },
         { type: "received", message: "Ciao", time: "5:22 PM" },
       ],
     },
@@ -98,6 +108,17 @@ const initialState = {
   },
 
   replyingText: "",
+
+  threadedViewOpened: false,
+  threadedChat: [
+    { type: "sent", message: "you there?", time: "1:20 PM" },
+    {
+      type: "received",
+      message: "Let's go out for a dinner today",
+      time: "6:50 PM",
+      attachmentImg: "https://source.unsplash.com/random/400x500/?burger",
+    },
+  ],
 };
 
 function reducer(state, action) {
@@ -126,7 +147,30 @@ function reducer(state, action) {
       };
 
     case "repliedToText":
-      return { ...state, replyingText: action.payload };
+      console.log("repliedText:", action.payload);
+      console.log("THREADED chAT", state.threadedChat);
+
+      if (action.payload && action.payload !== "") {
+        return {
+          ...state,
+          replyingText: action.payload,
+          threadedChat: [action.payload],
+        };
+      } else {
+        return {
+          ...state,
+          replyingText: action.payload,
+        };
+      }
+
+    case "threadedViewOpened":
+      return { ...state, threadedViewOpened: true };
+
+    case "threadedViewClosed":
+      return { ...state, threadedViewOpened: false };
+
+    case "setThreadedChat":
+      return { ...state, threadedChat: action.payload };
 
     default:
       throw new Error("Unkown Action.");
@@ -134,8 +178,18 @@ function reducer(state, action) {
 }
 
 function UsersContextProvider({ children }) {
-  const [{ users, chats, currentUser, activeUser, replyingText }, dispatch] =
-    useReducer(reducer, initialState);
+  const [
+    {
+      users,
+      chats,
+      currentUser,
+      activeUser,
+      replyingText,
+      threadedViewOpened,
+      threadedChat,
+    },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   const changeActiveUser = useCallback(function changeActiveUser(id) {
     dispatch({ type: "activeUserChanged", payload: id });
@@ -151,6 +205,18 @@ function UsersContextProvider({ children }) {
     dispatch({ type: "repliedToText", payload: text });
   });
 
+  function openThreadedChat() {
+    dispatch({ type: "threadedViewOpened" });
+  }
+
+  function closeThreadedChat() {
+    dispatch({ type: "threadedViewClosed" });
+  }
+
+  function setThreadedChat(chat) {
+    dispatch({ type: "setThreadedChat", payload: chat });
+  }
+
   const sharedGlobalState = useMemo(function () {
     return {
       users,
@@ -161,6 +227,11 @@ function UsersContextProvider({ children }) {
       replyingText,
       addChat,
       setReplyingToText,
+      threadedViewOpened,
+      threadedChat,
+      closeThreadedChat,
+      openThreadedChat,
+      setThreadedChat,
     };
   });
 

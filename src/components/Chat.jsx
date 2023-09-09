@@ -6,7 +6,7 @@ import Input from "./Input";
 import { useUsersContext } from "../contexts/Context";
 
 function Chat() {
-  const { activeUser, users } = useUsersContext();
+  const { activeUser } = useUsersContext();
   const { name } = activeUser;
 
   return (
