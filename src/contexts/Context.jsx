@@ -203,7 +203,7 @@ function UsersContextProvider({ children }) {
   const setReplyingToText = useCallback(function setReplyingToText(text) {
     console.log("reply text", text);
     dispatch({ type: "repliedToText", payload: text });
-  });
+  }, []);
 
   function openThreadedChat() {
     dispatch({ type: "threadedViewOpened" });

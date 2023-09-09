@@ -1,11 +1,13 @@
 import { useRef, useState } from "react";
 import { useUsersContext } from "../contexts/Context";
 import useOutsideClick from "../hooks/useOutsideClick";
+import SearchMessage from "./SearchMessage";
 
 function Search() {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
-  const { users, activeUser, currentUser, changeActiveUser } =
+  const [searchMsg, setSearchMsg] = useState([]);
+  const { users, activeUser, currentUser, changeActiveUser, chats } =
     useUsersContext();
   const searchBox = useRef(null);
   const { clickedOutside } = useOutsideClick(searchBox, closeSearchedUser);
@@ -26,6 +28,23 @@ function Search() {
 
     if (searchedUser) {
       setUser(searchedUser);
+    }
+
+    const searchedMessages = chats.reduce((acc1, chat) => {
+      const msgs = chat.messages.reduce((acc2, msg) => {
+        return msg.message.includes(username)
+          ? [...acc2, { id: chat.id, message: msg.message }]
+          : acc2;
+      }, []);
+      if (msgs.length > 0) {
+        return [...acc1, ...msgs];
+      }
+      return acc1;
+    }, []);
+
+    if (searchedMessages.length > 0) {
+      console.log(searchedMessages);
+      setSearchMsg(searchedMessages);
     }
   }
 
@@ -62,6 +81,9 @@ function Search() {
             </div>
           </div>
         )}
+        {searchMsg.map((msg) => {
+          <SearchMessage userid={msg.id} message={msg.message} />;
+        })}
       </div>
     </div>
   );
