@@ -1,5 +1,5 @@
 function SearchMessage({ userid, message }) {
-  console.log(userid);
+  console.log("id", userid);
   return (
     <div>
       <span>{userid}</span>

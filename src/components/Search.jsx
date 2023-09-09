@@ -19,6 +19,7 @@ function Search() {
   function handleSearch() {
     if (!username) {
       setUser("");
+      setSearchMsg([]);
       return;
     }
 
@@ -43,18 +44,21 @@ function Search() {
     }, []);
 
     if (searchedMessages.length > 0) {
-      console.log(searchedMessages);
       setSearchMsg(searchedMessages);
     }
   }
 
   function handleKey(e) {
     if (e.code === "Enter") handleSearch();
-    else setUser("");
+    else {
+      setUser("");
+      setSearchMsg([]);
+    }
   }
 
   function handleUserClick() {
     setUser("");
+    setSearchMsg([]);
 
     if (user.id === activeUser.id) return;
     changeActiveUser(user);
@@ -82,7 +86,15 @@ function Search() {
           </div>
         )}
         {searchMsg.map((msg) => {
-          <SearchMessage userid={msg.id} message={msg.message} />;
+          return (
+            <div onClick={handleUserClick}>
+              <SearchMessage
+                key={msg.id}
+                userid={msg.id}
+                message={msg.message}
+              />
+            </div>
+          );
         })}
       </div>
     </div>
